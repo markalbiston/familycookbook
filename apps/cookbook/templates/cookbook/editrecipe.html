@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cookbook/css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Family Cookbook</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="userline">
+                <h5 class="mr-1"><a style="color:white;" href="/cookbook/{{request.session.user_id}}">{{request.session.firstname}} | </a></h5>
+                <h5><a style="color:white;" href="/logout">Logout</a></h5>
+            </div>
+        </div>
+        <h2 class="userpagetitle mt-2 content-justify-center">Edit Recipe</h2>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <form action="/cookbook/{{request.session.user_id}}/editrecipe" method="POST" name="newrecipeform">
+                {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="form-group col-md-6">
+                            <label for="title" class="col col-form-label lightbar">Title:</label>
+                            <textarea name="title" class="form-control" rows="1">{{this_recipe.title}}</textarea>
+                        </div>
+                        <div class="form-group col-md-6"></div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-group col-md-4">
+                            <label for="ingredients" class="col col-form-label lightbar">Ingredients: </label>
+                            <textarea name="ingredients" class="form-control" rows="11">{{this_recipe.ingredients}}</textarea>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="directions" class="col col-form-label lightbar">Directions: </label>
+                            <textarea name="directions" class="form-control" rows="11">{{this_recipe.directions}}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-group col-md-12">
+                            <label for="notes" class="col col-form-label lightbar">Notes: </label>
+                            <textarea name="notes" class="form-control" rows="3">{{this_recipe.notes}}</textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="recipe_to_edit" value="{{this_recipe.id}}">
+                    <input type="submit" class="btn btn-dark" value="Update Recipe">
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        // var initialText = $('.editable').val();
+        // $('.editOption').val(initialText);
+
+        // $('#category').change(function(){
+        // var selected = $('option:selected', this).attr('class');
+        // var optionText = $('.editable').text();
+
+        // if(selected == "editable"){
+        // $('.editOption').show();
+
+        
+        // $('.editOption').keyup(function(){
+        //     var editText = $('.editOption').val();
+        //     $('.editable').val(editText);
+        //     $('.editable').html(editText);
+        // });
+
+        // }else{
+        // $('.editOption').hide();
+        // }
+        // });
+    </script>
+    <script type="text/javascript">
+        // function checkCapital(){
+        //     var inputcategory = document.forms["newrecipeform"]["category"];
+        //     var addcategory = document.getElementsByID("addcategory");
+        //     var regexp = /^[A-Z]/;
+        //     if (inputcategory.value.match(regexp)){
+        //         return true;
+        //     }
+        //     else{
+        //         window.alert("category must begin with a capital letter");
+        //         category.focus();
+        //         return false;
+        //     }
+        //     if (addcategory == ""){
+        //         return true;
+        //     }
+        // }
+
+        // function checkCapital(){
+        //     // var inputcategory = document.forms["newrecipeform"]["category"]
+        //     var inputcategory = document.getElementByName("category")
+        //     var regexp = /^[A-Z]/;
+        //     console.log(inputcategory)
+        //     if (inputcategory.value.match(regexp)){
+        //         return true;
+        //     }
+        //     else{
+        //         window.alert("category must begin with a capital letter");
+        //         return false;
+        //     }
+        // }
+
+    </script>
+
+</body>
+</html>

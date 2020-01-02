@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'login/css/cover.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Family Cookbook</title>
+</head>
+<body>
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+
+            </div>
+        </header>
+        
+        <main role="main" class="inner cover">
+            <h1 class="cover-heading">Sign Up</h1>
+            <p class="lead">for an account to start sharing your recipes</p>
+            <p class="lead">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                            <li {% if message.tags %} class="{{message.tags}} redfont" {% endif %}>{{message}}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                    <form action="/register" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-sm-3">First Name:</label>
+                            <input type="text" class="col-sm-6" name="firstname">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3">Last Name:</label>
+                            <input type="text" class="col-sm-6" name="lastname">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3">Email:</label>
+                            <input type="text" class="col-sm-6" name="email">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3">Password:</label>
+                            <input type="password" class="col-sm-6" name="password">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3">Confirm PW:</label>
+                            <input type="password" class="col-sm-6" name="passwordconf">
+                        </div>
+                        <input type="submit" class="btn btn-lg btn-dark" value="Register">
+                    </form>
+            </p>
+        </main>
+        
+        <footer class="mastfoot mt-auto">
+            <div class="inner">
+            <p></p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

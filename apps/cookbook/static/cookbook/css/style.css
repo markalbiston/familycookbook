@@ -1,0 +1,123 @@
+body{
+    height: 100%;
+    width: auto;
+    background-image: url('../img/garlic.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%, 100%;
+    background-attachment:fixed;
+
+}
+/* .container{
+    display: flex;
+    min-height: 800px;
+    width: auto;
+    background-image: url('../img/garlic.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%, 100%;
+    background-attachment:fixed;
+} */
+.comments{
+    margin-top:1px;
+    /* height: 500px; */
+    /* overflow-y: auto; */
+    background-image: linear-gradient(#D4D4D4,#FFFFFF);
+    opacity:90%;
+}
+.message{
+    border:1px solid rgb(173, 173, 173);
+    padding: 6px;
+    border-radius: 5px;
+}
+.userline{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.userline > h5{
+    color: white;
+}
+.header{
+    /* height: 100%;
+    width: auto;
+    background-image: url('../img/background.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%, 100%; */
+}
+nav{
+    background-color:rgb(233, 233, 233);
+    opacity: 70%;
+}
+
+.userline > h5{
+    display: inline;
+}
+.familyselect{
+    display: block;
+}
+.row{
+    display: flex;
+    justify-content: flex-end;
+}
+.userpagetitle{
+    color: #D6D6D6;
+    text-align: center;
+    /* font-family:  */
+}
+.tab-content{
+    display:inline;
+}
+.tab-pane{
+    /* display:inline; */
+    /* width:600px; */
+    margin-top:2px;
+    height:0px;
+    overflow: visible;
+}
+textarea{
+    overflow:scroll;
+    opacity: 90%;
+    border-radius: 10px;
+}
+label{
+    font-weight: bold;
+}
+.dropmenu{
+    background-color:rgb(233, 233, 233);
+    opacity: 70%;
+}
+.recipemodal{
+    background-image: linear-gradient(#D4D4D4,#FFFFFF);
+    opacity:95%;
+}
+.commentmodal{
+    opacity:100%;
+}
+.recipecard{
+    background-image: linear-gradient(#D4D4D4,#FFFFFF);
+    width: auto;
+    border-radius: 10px;
+    display: none;
+    height: 460px;
+    overflow-y: auto;
+    margin-top:2px;
+    /* background-image: url('../img/notecard.jpg'); */
+    /* background-repeat: no-repeat;
+    background-size: 100%, 100%; */
+}
+.recipecard>h3{
+    border-bottom:2px solid black;
+}
+.lightbar{
+    background-color:rgb(233, 233, 233);
+    opacity: 70%;
+    color: #1B1B19;
+    border-radius: 4px;
+}
+.categoryselector{
+    background-color:rgb(233, 233, 233);
+    opacity: 70%;
+}
+.dropdown_name{
+    font-weight: bold;
+
+}

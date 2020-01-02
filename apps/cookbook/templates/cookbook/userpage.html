@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cookbook/css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Family Cookbook</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="userline">
+                <h5 class="mr-1"><a style="color:white;" href="/cookbook/{{request.session.user_id}}" >{{request.session.firstname}}</a> | </h5>
+                <h5><a style="color:white;" href="/logout">Logout</a></h5>
+            </div>
+            <div class="row mt-2">
+                <div class="dropdown mr-3">
+                    {% if current_user.id == request.session.user_id %}
+                    <form action="/cookbook/{{request.session.user_id}}/family" method="POST">
+                    {% csrf_token %}
+                    <select name="family" class="btn btn-dark mb-1" id="family">
+                        <option selected disabled>Go To Family Cookbook</option>
+                            {% for f in user_families %}
+                                {% for }
+                            <option class="non"value="{{f.id}}">{{f.family_name}}</option>
+                            {% endfor %}
+                            <option class="editable">Add Family</option>
+                            <input class="editOption" style="display:none; width: 85%;" placeholder="add new family">
+                        </select>
+                        <input type="submit" class="btn btn-dark mb-1" value="GO!">
+                    </form>
+                    <form action="/cookbook/{{request.session.user_id}}/joinfamily" method="POST">
+                        {% csrf_token %}
+                        <select name="joinfamily" class="btn btn-dark" id="joinfamily">
+                            <option selected disabled>Select Family to Join</option>
+                            {% for f in all_families %}
+                            <option class="non"value="{{f.id}}">{{f.family_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-dark" value="JOIN!">
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% if current_user.id != request.session.user_id %}
+            <h2 class="userpagetitle mt-2 content-justify-center">{{current_user.first_name}}'s Recipes</h2>
+            {% else %}
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-dark" href="/cookbook/{{request.session.user_id}}/newrecipecard">Add a Recipe</a>
+                </div>
+                <div class="col">
+                    <h2 class="userpagetitle content-justify-center">My Recipes</h2>
+                </div>
+                <div class="col"></div>
+            </div>
+            {% endif %}
+        </div>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                {% for c in user_categories %}
+                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#{{c.title}}" role="tab" aria-controls="nav-home" aria-selected="true" style="color:#1B1B19; font-weight: bold;">{{c.title | title}}</a>
+                {% endfor %}
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                {% for c in user_categories %}
+                <div class="tab-pane fade" id="{{c.title}}" role="tabpanel" aria-labelledby="nav-home-tab" >
+                    <div class="col-md-3" style="padding:0px 24px 0px 0px; display:inline-block;">
+                        <div class="list-group recipe">
+                            {% for r in user_recipes %}
+                            {% if c.title == r.category.title %}
+                                <a href="#" id="{{r.id}}" class="list-group-item list-group-item-action dropmenu" data-toggle="modal" data-target="#recipecard_{{r.id}}">{{r.title | title}}</a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="row">
+                    {% for r in user_recipes %}
+                    <div class="modal fade" id="recipecard_{{r.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg recipemodal" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="exampleModalScrollableTitle">{{r.title | title}}</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="font-style:italic;">uploaded by {{r.user.first_name}} {{r.user.last_name}} | {{r.created_at}}</p>
+                                    {% if r.created_at != r.updated_at %}
+                                        <p style="font-style:italic;">last updated: {{r.updated_at}}</p>
+                                    {% endif %}
+                                    <p style="font-weight:bold;">Ingredients:</p>
+                                    <p>{{r.ingredients|linebreaks}}</p>
+                                    <p style="font-weight:bold;">Directions:</p>
+                                    <p>{{r.directions|linebreaks}}</p>
+                                    <p style="font-weight:bold;">Notes:</p>
+                                    <p>{{r.notes|linebreaks}}</p>
+                                    <p style="font-weight:bold;">Comments:</p>
+                                    {% for c in all_comments %}
+                                        {% if c.recipe.id == r.id %}
+                                        <p>{{c.user.first_name}} | <span style="font-style:italic;">{{c.created_at}}</span></p>
+                                        <p class="ml-4" style="border-bottom:1px solid #D4D4D4;">"{{c.comment_text}}"</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                    {% if r.user.id == request.session.user_id %}
+                                        <form action="/cookbook/{{request.session.user_id}}/editrecipecard" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-warning" name="recipe_to_edit" value="{{r.id}}">Edit Recipe</button> 
+                                        </form>
+                                        <form action="/cookbook/{{request.session.user_id}}/deleterecipe" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger deleterecipe" name="recipe_to_delete" value="{{r.id}}">Delete Recipe</button> 
+                                        </form>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#comment_commentmodal_{{r.id}}">Comment</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <div class="modal fade" id="comment_commentmodal_{{r.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog commentmodal" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Comment</h5>
+                                                    <button type="button" class="close closecommentmodal" id="commentmodal_{{r.id}}"aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/cookbook/{{r.id}}/postcomment" method="POST">
+                                                {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <textarea name="newcomment" class="form-control" rows="3" placeholder="write a comment on this recipe"></textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="comment_from" value="userpage">
+                                                        <input type="hidden" name="current_user_id" value="{{r.user.id}}">
+                                                        <input type="hidden" name="recipe_to_comment" value="{{r.id}}">
+                                                        <button type="submit" class="btn btn-primary">Post Comment to Recipe</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script>
+            var initialText = $('.editable').val();
+            $('.editOption').val(initialText);
+    
+            $('#family').change(function(){
+            var selected = $('option:selected', this).attr('class');
+            var optionText = $('.editable').text();
+    
+            if(selected == "editable"){
+            $('.editOption').show();
+    
+            
+            $('.editOption').keyup(function(){
+                var editText = $('.editOption').val();
+                $('.editable').val(editText);
+                $('.editable').html(editText);
+            });
+    
+            }else{
+            $('.editOption').hide();
+            }
+            });
+
+            $('.deleterecipe').click(function(){
+                if (!confirm("Are you sure you want to delete this recipe?")){
+                    return false;
+                }
+            });
+            
+            $('.closecommentmodal').each(function(){
+                $(this).click(function(){
+                    $('#comment_'+$(this).attr('id')).modal('hide');
+                });
+            });
+
+            // $('#closecommentmodal').click(function(){
+            //     $('#commentmodal_{{r.id}}').modal('hide')
+            // });
+
+            // $(".recipe a").click(function(){
+            //     $(".recipecard").show();
+            // });
+
+
+            // $(".recipe a").each(function(){
+            //     var toggle_div_id = 'recipecard_' + $(this).attr('id');
+            //     $(this).click(function(){
+            //         $('#'+toggle_div_id).toggle();
+            //     });
+            // });
+
+
+        </script>
+</body>
+
+</html>

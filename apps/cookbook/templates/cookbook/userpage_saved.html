@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cookbook/css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Family Cookbook</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="userline">
+                <h5 class="mr-1"><a style="color:white;" href="/cookbook/{{request.session.user_id}}" >{{request.session.firstname}}</a> | </h5>
+                <h5><a style="color:white;" href="/logout">Logout</a></h5>
+            </div>
+            <div class="row mt-2">
+                <div class="dropdown mr-3">
+                    {% if current_user.id == request.session.user_id %}
+                    <form action="/cookbook/{{request.session.user_id}}/family" method="POST">
+                    {% csrf_token %}
+                    <select name="family" class="btn btn-dark mb-1" id="family">
+                        <option selected disabled>Go To Family Cookbook</option>
+                            {% for f in user_families %}
+                                {% for }
+                            <option class="non"value="{{f.id}}">{{f.family_name}}</option>
+                            {% endfor %}
+                            <option class="editable" value="int({{all_families.all | length}}+1)">Add Family</option>
+                            <input class="editOption" style="display:none; width: 85%;" placeholder="add new family">
+                        </select>
+                        <input type="submit" class="btn btn-dark mb-1" value="GO!">
+                    </form>
+                    <form action="/cookbook/{{request.session.user_id}}/joinfamily" method="POST">
+                        {% csrf_token %}
+                        <select name="joinfamily" class="btn btn-dark" id="joinfamily">
+                            <option selected disabled>Select Family to Join</option>
+                            {% for f in all_families %}
+                            <option class="non"value="{{f.id}}">{{f.family_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-dark" value="JOIN!">
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% if current_user.id != request.session.user_id %}
+            <h2 class="userpagetitle mt-2 content-justify-center">{{current_user.first_name}}'s Recipes</h2>
+            {% else %}
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-dark" href="/cookbook/{{request.session.user_id}}/newrecipecard">Add a Recipe</a>
+                </div>
+                <div class="col">
+                    <h2 class="userpagetitle content-justify-center">My Recipes</h2>
+                </div>
+                <div class="col"></div>
+            </div>
+            {% endif %}
+        </div>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                {% for c in user_categories %}
+                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#{{c.title}}" role="tab" aria-controls="nav-home" aria-selected="true" style="color:#1B1B19; font-weight: bold;">{{c.title}}</a>
+                {% endfor %}
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                {% for c in user_categories %}
+                <div class="tab-pane fade" id="{{c.title}}" role="tabpanel" aria-labelledby="nav-home-tab" >
+                    <div class="col-md-3" style="padding:0px 24px 0px 0px; display:inline-block;">
+                        <div class="list-group recipe">
+                            {% for r in user_recipes %}
+                            {% if c.title == r.category.title %}
+                                <a href="#" id="{{r.id}}" class="list-group-item list-group-item-action dropmenu">{{r.title}}</a>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="row">
+                    {% for r in user_recipes %}
+                    <div class="col-md-9 mr-3 recipecard" id="recipecard_{{r.id}}">
+                        <h3 class="mb-2" style="text-align: center;">{{r.title}}</h3>
+                        <p style="font-style:italic;">uploaded by {{r.user.first_name}} {{r.user.last_name}} | {{r.created_at}}</p>
+                        <p style="font-weight:bold;">Ingredients:</p>
+                        <p>{{r.ingredients}}</p>
+                        <p style="font-weight:bold;">Directions:</p>
+                        <p>{{r.directions}}</p>
+                        <p style="font-weight:bold;">Notes:</p>
+                        <p>{{r.notes}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script>
+            var initialText = $('.editable').val();
+            $('.editOption').val(initialText);
+    
+            $('#family').change(function(){
+            var selected = $('option:selected', this).attr('class');
+            var optionText = $('.editable').text();
+    
+            if(selected == "editable"){
+            $('.editOption').show();
+    
+            
+            $('.editOption').keyup(function(){
+                var editText = $('.editOption').val();
+                $('.editable').val(editText);
+                $('.editable').html(editText);
+            });
+    
+            }else{
+            $('.editOption').hide();
+            }
+            });
+
+            // $(".recipe a").click(function(){
+            //     $(".recipecard").show();
+            // });
+
+
+            $(".recipe a").each(function(){
+                var toggle_div_id = 'recipecard_' + $(this).attr('id');
+                $(this).click(function(){
+                    $('#'+toggle_div_id).toggle();
+                });
+            });
+
+
+        </script>
+</body>
+
+</html>
